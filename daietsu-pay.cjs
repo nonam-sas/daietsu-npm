@@ -271,9 +271,9 @@ const DaietsuPay = {
             try {
                 decoded_token = JSON.parse(window.atob(payment_token.split(".")[1]));
             } catch (e) {
-                return resolve("INVALID_PAYMENT_TOKEN_PROVIDED");
+                return resolve("INVALID_PAYMENT_TOKEN");
             }
-            if (decoded_token.sub != payment_id) return resolve("INVALID_PAYMENT_TOKEN_PROVIDED"); 
+            if (decoded_token.sub != payment_id) return resolve("INVALID_PAYMENT_TOKEN"); 
             // crypt
             card_number = card_number.replace(/ /g, "");
             let encrypted_details = await DaietsuPay._enc(JSON.stringify({card_number, expiry_month, expiry_year, cvc}), public_keys[decoded_token.rsa_key]);

@@ -3,7 +3,6 @@
     "type": "module",
     "version": "1.0.0",
     "main": "server-lib.js",
-    "private": true,
     "author": "Nonam SAS <contact@non.am>",
     "repository": {
         "type": "git",

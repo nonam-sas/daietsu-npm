@@ -117,7 +117,7 @@ class DaietsuAPI {
      */
     create_authorization_url (redirect_uri = null, scopes = []) {
         let errors = [];
-        if(!redirect_uri) errors.push("INVALID_REDIRECT_URI");
+        if(!redirect_uri) errors.push("MISSING_REDIRECT_URI");
         scopes = (typeof scopes == "string" ? scopes.split(",") : scopes);
         if(!Array.isArray(scopes)) errors.push("INVALID_SCOPES_FORMAT");
         if(errors.length>0) return reject(errors);
@@ -185,12 +185,12 @@ class DaietsuAPI {
     create_payment (token = null, amount = null, currency = null, description = null, meta = null, webhook = null, return_url = null) {
         return new Promise(async (resolve, reject) => {
             let errors = [];
-            if(!token) errors.push("INVALID_TOKEN");
+            if(!token) errors.push("MISSING_TOKEN");
             amount = Number.parseInt(amount);
-            if(!amount || Number.isNaN(amount) || typeof number !== "number") errors.push("INVALID_AMOUNT");
-            if(amount < 0.5) errors.push("AMOUNT_TOO_LOW");
-            if(!currency) errors.push("INVALID_CURRENCY");
-            if(!description) errors.push("INVALID_DESCRIPTION");
+            if(!amount || Number.isNaN(amount) || typeof number !== "number") errors.push("MISSING_AMOUNT");
+            else if(amount < 0.5) errors.push("AMOUNT_TOO_LOW");
+            if(!currency) errors.push("MISSING_CURRENCY");
+            if(!description) errors.push("MISSING_DESCRIPTION");
             if(errors.length>0) return reject(errors);
             let data = {amount, currency, description};
             if(meta) data.meta = meta;

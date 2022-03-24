@@ -290,3 +290,4 @@ const DaietsuPay = {
         });
     }
 }
+if(module !== undefined) module.exports = DaietsuPay;

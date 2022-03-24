@@ -239,7 +239,7 @@ class DaietsuAPI {
      * @param {string} payment_id ID of payment to retrieve
      * @returns {Promise<Payment>} Payment data
      */
-    get_payment (token, payment_id = null) {
+    get_payment (token = null, payment_id = null) {
         return new Promise(async (resolve, reject) => {
             let errors = [];
             if(!token) errors.push("INVALID_TOKEN");

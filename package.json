@@ -1,0 +1,15 @@
+{
+    "name": "daietsu",
+    "type": "module",
+    "version": "1.0.0",
+    "main": "server-lib.js",
+    "private": true,
+    "author": "Nonam SAS <contact@non.am>",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonam-sas/daietsu-npm.git"
+    },
+    "dependencies": {
+        "node-fetch": "^3.2.3"
+    }
+}

@@ -1,5 +1,6 @@
 // Imports
 import fetch from "node-fetch";
+import crypto from "crypto";
 // Hosts
 const SANDBOX_API_HOST = "https://sandbox-api.daietsu.app";
 const API_HOST = "https://api.daietsu.app";
@@ -253,6 +254,17 @@ class DaietsuAPI {
             }
             return resolve(payment);
         });
-    }    
+    }
+
+    /**
+     * Validate webhook content
+     * @param {string} header X-Daietsu-Webhook header content
+     * @param {Object} content Actual JSON content
+     * @returns {boolean} Valid?
+     */
+    validate_webhook_content (header, content) {
+        let hashed_content = crypto.createHash("sha512").update(this._client_secret + ":" + (typeof content == "string" ? content : JSON.stringify(content))).digest("base64");
+        return (header == hashed_content);
+    }
 }
 export default DaietsuAPI;

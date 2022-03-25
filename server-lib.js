@@ -53,7 +53,6 @@ class DaietsuAPI {
      * @typedef PaymentDetails
      * @property {boolean} active Payments enabled?
      * @property {(ProviderAccount[]|undefined)} provider_accounts Provider accounts
-     * @property {string} webhook Default webhook URL
      * @property {string} return_url Default return URL
      */
 
@@ -179,11 +178,10 @@ class DaietsuAPI {
      * @param {string} currency Payment currency
      * @param {string} description Payment description
      * @param {string} [meta] Payment meta 
-     * @param {string} [webhook] Specific transaction webhook
      * @param {string} [return_url] Specific transaction return URL 
      * @returns {Promise<TransactionInfos>} Transaction infos
      */
-    create_payment (token = null, amount = null, currency = null, description = null, meta = null, webhook = null, return_url = null) {
+    create_payment (token = null, amount = null, currency = null, description = null, meta = null, return_url = null) {
         return new Promise(async (resolve, reject) => {
             let errors = [];
             if(!token) errors.push("MISSING_TOKEN");
@@ -227,7 +225,6 @@ class DaietsuAPI {
      * @property {string} meta Payment meta
      * @property {(string|null)} provider Provider in charge of payment
      * @property {(object|null|undefined)} provider_details Provider related data
-     * @property {(string|null)} webhook Payment-specific webhook
      * @property {(string|null)} return_url Payment-specific return URL
      * @property {number} created_at Payment creation timestamp
      * @property {(string|User|null)} created_by Payment creating user
@@ -259,11 +256,12 @@ class DaietsuAPI {
     /**
      * Validate webhook content
      * @param {string} header X-Daietsu-Webhook header content
-     * @param {Object} content Actual JSON content
+     * @param {Object} content Received JSON content
+     * @param {string} webhook_secret Webhook secret
      * @returns {boolean} Valid?
      */
-    validate_webhook_content (header, content) {
-        let hashed_content = crypto.createHash("sha512").update(this._client_secret + ":" + (typeof content == "string" ? content : JSON.stringify(content))).digest("base64");
+    validate_webhook_content (header, content, webhook_secret) {
+        let hashed_content = crypto.createHash("sha512").update(webhook_secret + ":" + (typeof content == "string" ? content : JSON.stringify(content))).digest("base64");
         return (header == hashed_content);
     }
 }

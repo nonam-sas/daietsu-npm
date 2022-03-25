@@ -1,7 +1,7 @@
 {
     "name": "daietsu",
     "type": "module",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "main": "server-lib.js",
     "author": "Nonam SAS <contact@non.am>",
     "repository": {

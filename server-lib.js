@@ -185,8 +185,8 @@ class DaietsuAPI {
         return new Promise(async (resolve, reject) => {
             let errors = [];
             if(!token) errors.push("MISSING_TOKEN");
-            amount = Number.parseInt(amount);
-            if(!amount || Number.isNaN(amount) || typeof number !== "number") errors.push("MISSING_AMOUNT");
+            amount = Number.parseFloat(amount);
+            if(!amount || Number.isNaN(amount)) errors.push("MISSING_AMOUNT");
             else if(amount < 0.5) errors.push("MINIMUM_AMOUNT_ISSUE");
             if(!currency) errors.push("MISSING_CURRENCY");
             if(!description) errors.push("MISSING_DESCRIPTION");

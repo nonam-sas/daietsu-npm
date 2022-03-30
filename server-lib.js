@@ -179,9 +179,10 @@ class DaietsuAPI {
      * @param {string} description Payment description
      * @param {string} [meta] Payment meta 
      * @param {string} [return_url] Specific transaction return URL 
+     * @param {string} [webhook] Specific transaction Webhook ID
      * @returns {Promise<TransactionInfos>} Transaction infos
      */
-    create_payment (token = null, amount = null, currency = null, description = null, meta = null, return_url = null) {
+    create_payment (token = null, amount = null, currency = null, description = null, meta = null, return_url = null, webhook = null) {
         return new Promise(async (resolve, reject) => {
             let errors = [];
             if(!token) errors.push("MISSING_TOKEN");

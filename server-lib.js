@@ -195,7 +195,7 @@ class DaietsuAPI {
             let data = {amount, currency, description};
             if(meta) data.meta = meta;
             if(webhook) data.webhook = webhook;
-            if(return_url) data.return_url;
+            if(return_url) data.return_url = return_url;
             let transaction_infos;
             try {
                 transaction_infos = await this._app_post("/payments", data, token);

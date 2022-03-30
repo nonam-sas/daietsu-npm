@@ -2,8 +2,8 @@
 import fetch from "node-fetch";
 import crypto from "crypto";
 // Hosts
-const SANDBOX_API_HOST = "https://sandbox-api.daietsu.app";
-const API_HOST = "https://api.daietsu.app";
+const SANDBOX_API_HOST = "https://sandbox-api.daietsu.app/v1";
+const API_HOST = "https://api.daietsu.app/v1";
 /** DaietsuAPI Server library */
 class DaietsuAPI {
     // Constructor

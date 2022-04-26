@@ -13,7 +13,7 @@ class DaietsuAPI {
 
     // Type defs
     /**
-     * @typedef CorporationMember
+     * @typedef OrganisationMember
      * @property {(string|User|undefined)} user Member's related user
      * @property {number} added_at Member's join timestamp 
      * @property {(string|User|undefined)} added_by Member's invite issued by
@@ -21,24 +21,24 @@ class DaietsuAPI {
      */
 
     /**
-     * @typedef Corporation
-     * @property {string} _id Corporation ID
-     * @property {string} name Corporation name
-     * @property {(string|User|undefined)} owner Corporation's owner
-     * @property {(CorporationMember[]|undefined)} members Corporation's members
-     * @property {number} created_at Corporation creation timestamp
-     * @property {(string|User|undefined)} created_by Corporation's creation user
-     * @property {number} edited_at Corporation last edition timestamp
-     */
-
-    /**
      * @typedef Organisation
      * @property {string} _id Organisation ID
      * @property {string} name Organisation name
-     * @property {(string|Corporation)} organisation Organisation's corporation
+     * @property {(string|User|undefined)} owner Organisation's owner
+     * @property {(OrganisationMember[]|undefined)} members Organisation's members
      * @property {number} created_at Organisation creation timestamp
      * @property {(string|User|undefined)} created_by Organisation's creation user
      * @property {number} edited_at Organisation last edition timestamp
+     */
+
+    /**
+     * @typedef Area
+     * @property {string} _id Area ID
+     * @property {string} name Area name
+     * @property {(string|Organisation)} organisation Area's organisation
+     * @property {number} created_at Area creation timestamp
+     * @property {(string|User|undefined)} created_by Area's creation user
+     * @property {number} edited_at Area last edition timestamp
      */
 
     /**
@@ -61,7 +61,7 @@ class DaietsuAPI {
      * @property {string} _id Establishment ID
      * @property {string} name Establishment name
      * @property {(PaymentDetails|undefined)} payment_details Establishment's payment details
-     * @property {(string|Organisation)} organisation Establishment's organisation
+     * @property {(string|Area)} area Area's organisation
      * @property {number} created_at Establishment creation timestamp
      * @property {(string|User|undefined)} created_by Establishment's creation user
      * @property {number} edited_at Establishemnt last edition timestamp

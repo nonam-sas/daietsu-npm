@@ -11,62 +11,6 @@ class DaietsuAPI {
     _client_id;
     _client_secret;
 
-    // Type defs
-    /**
-     * @typedef OrganisationMember
-     * @property {(string|User|undefined)} user Member's related user
-     * @property {number} added_at Member's join timestamp 
-     * @property {(string|User|undefined)} added_by Member's invite issued by
-     * 
-     */
-
-    /**
-     * @typedef Organisation
-     * @property {string} _id Organisation ID
-     * @property {string} name Organisation name
-     * @property {(string|User|undefined)} owner Organisation's owner
-     * @property {(OrganisationMember[]|undefined)} members Organisation's members
-     * @property {number} created_at Organisation creation timestamp
-     * @property {(string|User|undefined)} created_by Organisation's creation user
-     * @property {number} edited_at Organisation last edition timestamp
-     */
-
-    /**
-     * @typedef Area
-     * @property {string} _id Area ID
-     * @property {string} name Area name
-     * @property {(string|Organisation)} organisation Area's organisation
-     * @property {number} created_at Area creation timestamp
-     * @property {(string|User|undefined)} created_by Area's creation user
-     * @property {number} edited_at Area last edition timestamp
-     */
-
-    /**
-     * @typedef ProviderAccount
-     * @property {string} provider Provider code
-     * @property {number} rate Rate for this provider
-     * @property {number} added_at Provider addition timestamp
-     * @property {(string|User|undefined)} added_by Provider added by User
-     */
-
-    /**
-     * @typedef PaymentDetails
-     * @property {boolean} active Payments enabled?
-     * @property {(ProviderAccount[]|undefined)} provider_accounts Provider accounts
-     * @property {string} return_url Default return URL
-     */
-
-    /**
-     * @typedef Establishment
-     * @property {string} _id Establishment ID
-     * @property {string} name Establishment name
-     * @property {(PaymentDetails|undefined)} payment_details Establishment's payment details
-     * @property {(string|Area)} area Area's organisation
-     * @property {number} created_at Establishment creation timestamp
-     * @property {(string|User|undefined)} created_by Establishment's creation user
-     * @property {number} edited_at Establishemnt last edition timestamp
-     */
-
     /**
      * Creates instance of DaietsuAPI
      * @param {string} client_id Client ID
@@ -111,17 +55,19 @@ class DaietsuAPI {
 
     /**
      * Create authorization URL
+     * @param {string} mode Authorization mode (establishment, area, organisation, service)
      * @param {string} redirect_uri Redirect URI to send back user to after prompt
      * @param {(string|string[])} scopes Scopes to request access to
      * @returns {string} manage.daietsu.app authorization URL
      */
-    create_authorization_url (redirect_uri = null, scopes = []) {
+    create_authorization_url (mode = "service", redirect_uri = null, scopes = []) {
         let errors = [];
+        if(!["establishment", "area", "organisation", "service"].includes(mode)) errors.push("INVALID_MODE");
         if(!redirect_uri) errors.push("MISSING_REDIRECT_URI");
         scopes = (typeof scopes == "string" ? scopes.split(",") : scopes);
         if(!Array.isArray(scopes)) errors.push("INVALID_SCOPES_FORMAT");
         if(errors.length>0) return reject(errors);
-        return `https://manage.daietsu.app/authorize?a=${this._client_id}&m=establishment&s=${scopes.join(",")}&r=${encodeURIComponent(redirect_uri)}`;
+        return `https://manage.daietsu.app/authorize?a=${this._client_id}&m=${mode}&s=${scopes.join(",")}&r=${encodeURIComponent(redirect_uri)}`;
     }
 
     /**
@@ -166,23 +112,16 @@ class DaietsuAPI {
     }
 
     /**
-     * @typedef TransactionInfos
-     * @property {string} payment_id Payment ID
-     * @property {(string|null)} payment_token Payment token (for client SDK)
-     */
-
-    /**
      * Create payment
      * @param {string} token Establishment token
      * @param {number} amount Amount to pay
      * @param {string} currency Payment currency
      * @param {string} description Payment description
      * @param {string} [meta] Payment meta 
-     * @param {string} [return_url] Specific transaction return URL 
-     * @param {string} [webhook] Specific transaction Webhook ID
+     * @param {string} [return_url] Specific transaction return URL
      * @returns {Promise<TransactionInfos>} Transaction infos
      */
-    create_payment (token = null, amount = null, currency = null, description = null, meta = null, return_url = null, webhook = null) {
+    create_payment (token = null, amount = null, currency = null, description = null, meta = null, return_url = null) {
         return new Promise(async (resolve, reject) => {
             let errors = [];
             if(!token) errors.push("MISSING_TOKEN");
@@ -194,7 +133,6 @@ class DaietsuAPI {
             if(errors.length>0) return reject(errors);
             let data = {amount, currency, description};
             if(meta) data.meta = meta;
-            if(webhook) data.webhook = webhook;
             if(return_url) data.return_url = return_url;
             let transaction_infos;
             try {
@@ -205,32 +143,6 @@ class DaietsuAPI {
             return resolve(transaction_infos);
         });
     }
-
-    /**
-     * @typedef PaymentStatus
-     * @property {string} value Payment status code
-     * @property {(object|null|undefined)} details Payment status details
-     * @property {number} at Payment status adopted timestamp
-     */
-
-    /**
-     * @typedef Payment
-     * @property {string} _id Payment ID
-     * @property {PaymentStatus[]} status_history Status history
-     * @property {number} amount Payment amount
-     * @property {string} description Payment description
-     * @property {number} billed_fees Billed fees amount
-     * @property {(string|Currency)} currency Payment currency
-     * @property {boolean} is_sandbox Is sandbox payment?
-     * @property {string} encryption_key Key ID used to sign instrument
-     * @property {string} meta Payment meta
-     * @property {(string|null)} provider Provider in charge of payment
-     * @property {(object|null|undefined)} provider_details Provider related data
-     * @property {(string|null)} return_url Payment-specific return URL
-     * @property {number} created_at Payment creation timestamp
-     * @property {(string|User|null)} created_by Payment creating user
-     * @property {(string|App|null)} created_via Payment creating app
-     */
 
     /**
      * Get payment

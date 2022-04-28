@@ -60,14 +60,15 @@ class DaietsuAPI {
      * @param {(string|string[])} scopes Scopes to request access to
      * @returns {string} manage.daietsu.app authorization URL
      */
-    create_authorization_url (mode = "service", redirect_uri = null, scopes = []) {
+    create_authorization_url (mode = "service", redirect_uri = null, scopes = [], service_type = null) {
         let errors = [];
         if(!["establishment", "area", "organisation", "service"].includes(mode)) errors.push("INVALID_MODE");
+        else if(mode == "service" && !["PAYMENTS", "CAPTIVE_PORTAL"].includes(service_type)) errors.push("MISSING_SERVICE_TYPE");
         if(!redirect_uri) errors.push("MISSING_REDIRECT_URI");
         scopes = (typeof scopes == "string" ? scopes.split(",") : scopes);
         if(!Array.isArray(scopes)) errors.push("INVALID_SCOPES_FORMAT");
         if(errors.length>0) return reject(errors);
-        return `https://manage.daietsu.app/authorize?a=${this._client_id}&m=${mode}&s=${scopes.join(",")}&r=${encodeURIComponent(redirect_uri)}`;
+        return `https://manage.daietsu.app/authorize?a=${this._client_id}&m=${mode}&s=${scopes.join(",")}&r=${encodeURIComponent(redirect_uri)}` + (mode == "service" ? `&t=${service_type}` : '');
     }
 
     /**
